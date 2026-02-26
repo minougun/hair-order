@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Hair Order Icon</title>
+  <desc id="desc">Rounded pink emblem with the letter H.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c0029" />
+      <stop offset="55%" stop-color="#bf3f6e" />
+      <stop offset="100%" stop-color="#e07098" />
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#bg)" />
+  <rect x="22" y="22" width="212" height="212" rx="50" fill="none" stroke="#f8d6a7" stroke-width="6" opacity="0.9" />
+  <rect x="64" y="56" width="34" height="144" rx="12" fill="#ffffff" />
+  <rect x="158" y="56" width="34" height="144" rx="12" fill="#ffffff" />
+  <rect x="95" y="106" width="66" height="34" rx="10" fill="#ffffff" />
+  <circle cx="186" cy="44" r="18" fill="#f7c666" />
+</svg>

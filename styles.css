@@ -45,6 +45,24 @@ body {
   padding: 12px 14px 10px;
 }
 
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(125, 20, 63, 0.22);
+  flex: 0 0 auto;
+}
+
+.app-brand-text {
+  min-width: 0;
+}
+
 .app-kicker {
   margin: 0;
   display: inline-flex;
@@ -453,6 +471,12 @@ input[type="file"]:focus {
 @media (min-width: 1080px) {
   .app-header {
     padding: 16px 20px 13px;
+  }
+
+  .app-logo {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
   }
 
   .app-title {
