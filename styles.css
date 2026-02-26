@@ -78,13 +78,6 @@ body {
   background: linear-gradient(90deg, var(--accent) 0%, #f09170 100%);
 }
 
-.app-lead {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.79rem;
-  line-height: 1.5;
-}
-
 .layout {
   display: grid;
   grid-template-columns: 1fr;
