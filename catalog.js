@@ -356,8 +356,9 @@ export function findBestCatalogItems({ input, result, limit = 3 }) {
   const querySet = new Set(queryTags);
   const locationSignal = buildLocationSignal(input);
   const freeTextSignal = buildFreeTextSignal(input.customRequest);
+  const requiredGenderTag = input.gender === "female" ? "gender_female" : "gender_male";
 
-  const scored = HAIR_CATALOG.map((item) => {
+  const scored = HAIR_CATALOG.filter((item) => item.tags.includes(requiredGenderTag)).map((item) => {
     const matchedTags = item.tags.filter((tag) => querySet.has(tag));
     let score = matchedTags.reduce((sum, tag) => sum + tagWeight(tag), 0);
 
