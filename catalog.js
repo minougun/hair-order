@@ -1,7 +1,8 @@
 const DEFAULT_BOOKING_URL = "https://beauty.hotpepper.jp/";
 
-function links(official, instagram, booking = DEFAULT_BOOKING_URL) {
+function links(styleUrl, official, instagram, booking = DEFAULT_BOOKING_URL) {
   return [
+    { label: "おすすめスタイル", url: styleUrl },
     { label: "公式サイト", url: official },
     { label: "Instagram", url: instagram },
     { label: "予約ページ", url: booking },
@@ -13,11 +14,12 @@ export const HAIR_CATALOG = [
     id: "C01",
     title: "ビジネスショート（タイトサイド）",
     subtitle: "清潔感が出やすい定番シルエット",
-    sourceName: "OCEAN TOKYO",
+    sourceName: "AFLOAT GINZA",
     externalLinks: links(
-      "https://www.oceantokyo.com/",
-      "https://www.instagram.com/oceantokyo_official/",
-      "https://beauty.hotpepper.jp/slnH000264498/"
+      "https://beauty.hotpepper.jp/slnH000233454/style/L272811465.html",
+      "https://afloat.co.jp/",
+      "https://www.instagram.com/afloat_japan/",
+      "https://beauty.hotpepper.jp/slnH000233454/"
     ),
     tags: ["length_short", "goal_business", "goal_clean", "time_3", "tool_no_iron", "shape_tight_side", "occasion_office", "style_natural", "gender_male"],
   },
@@ -25,8 +27,9 @@ export const HAIR_CATALOG = [
     id: "C02",
     title: "ナチュラルショート（前髪コントロール）",
     subtitle: "前髪の割れを目立たせにくい設計",
-    sourceName: "LIPPS hair",
+    sourceName: "upis 飯田橋",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000406803/style/L272810551.html",
       "https://lipps-hair.com/",
       "https://www.instagram.com/lipps_hair/",
       "https://lipps-hair.com/reservation/"
@@ -37,8 +40,9 @@ export const HAIR_CATALOG = [
     id: "C03",
     title: "テクスチャーショート",
     subtitle: "軽い束感でカジュアル寄せ",
-    sourceName: "SHIMA",
+    sourceName: "EARTH 八潮店",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000444665/style/L272811664.html",
       "https://www.shima-hair.com/",
       "https://www.instagram.com/shima_official_account/",
       "https://www.shima-hair.com/reserve/"
@@ -51,6 +55,7 @@ export const HAIR_CATALOG = [
     subtitle: "ぺたんこ対策向けの立体感重視",
     sourceName: "OCEAN TOKYO",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000264498/style/L242723149.html",
       "https://www.oceantokyo.com/",
       "https://www.instagram.com/oceantokyo_official/",
       "https://beauty.hotpepper.jp/slnH000264498/"
@@ -61,8 +66,9 @@ export const HAIR_CATALOG = [
     id: "C05",
     title: "センターパート（韓国寄せ）",
     subtitle: "落ち感とシャープさの中間",
-    sourceName: "LIPPS hair",
+    sourceName: "ANSWER 渋谷",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000759403/style/L253765222.html",
       "https://lipps-hair.com/",
       "https://www.instagram.com/lipps_hair/",
       "https://lipps-hair.com/reservation/"
@@ -73,8 +79,9 @@ export const HAIR_CATALOG = [
     id: "C06",
     title: "ミディアムレイヤー（柔らかめ）",
     subtitle: "動きは出しつつ重さも残す",
-    sourceName: "MINX",
+    sourceName: "ROGUE",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000722048/style/L236611163.html",
       "https://minx-net.co.jp/",
       "https://www.instagram.com/minx_hair/",
       "https://8eca03.b-merit.jp/z3SPb7/web/reserve1/?from_coupon=1&no_coupon=1&redirect=1"
@@ -85,8 +92,9 @@ export const HAIR_CATALOG = [
     id: "C07",
     title: "収まり重視ミディアム",
     subtitle: "広がりを抑えるまとまり設計",
-    sourceName: "GARDEN",
+    sourceName: "AHL creation",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000559325/style/L272810829.html",
       "https://www.garden-hair.jp/",
       "https://www.instagram.com/garden_hair/",
       "https://www.garden-hair.jp/reserve/"
@@ -97,8 +105,9 @@ export const HAIR_CATALOG = [
     id: "C08",
     title: "オフィス向けミディアムショート",
     subtitle: "仕事でも浮きにくい輪郭",
-    sourceName: "GARDEN",
+    sourceName: "EARTH 八潮店",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000444665/style/L272806959.html",
       "https://www.garden-hair.jp/",
       "https://www.instagram.com/garden_hair/",
       "https://www.garden-hair.jp/reserve/"
@@ -109,8 +118,9 @@ export const HAIR_CATALOG = [
     id: "C09",
     title: "ノーセット寄りショート",
     subtitle: "乾かすだけ運用向け",
-    sourceName: "OCEAN TOKYO",
+    sourceName: "upis 飯田橋",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000406803/style/L272810780.html",
       "https://www.oceantokyo.com/",
       "https://www.instagram.com/oceantokyo_official/",
       "https://beauty.hotpepper.jp/slnH000264498/"
@@ -121,8 +131,9 @@ export const HAIR_CATALOG = [
     id: "C10",
     title: "ワイド抑制ショート",
     subtitle: "サイド膨らみ・ハチ張り対策",
-    sourceName: "LIPPS hair",
+    sourceName: "anis musee",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000437479/style/L272810684.html",
       "https://lipps-hair.com/",
       "https://www.instagram.com/lipps_hair/",
       "https://lipps-hair.com/reservation/"
@@ -133,8 +144,9 @@ export const HAIR_CATALOG = [
     id: "C11",
     title: "ウェーブ活かしミディアム",
     subtitle: "うねりを活かすカジュアル仕様",
-    sourceName: "ALBUM",
+    sourceName: "syn",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000346025/style/L172278688.html",
       "https://www.album-hair.com/",
       "https://www.instagram.com/album_hair/",
       DEFAULT_BOOKING_URL
@@ -145,8 +157,9 @@ export const HAIR_CATALOG = [
     id: "C12",
     title: "ロングレイヤー（柔らか質感）",
     subtitle: "まとまりと軽さのバランス型",
-    sourceName: "AFLOAT",
+    sourceName: "ROGUE",
     externalLinks: links(
+      "https://beauty.hotpepper.jp/slnH000722048/style/L236611163.html",
       "https://afloat.co.jp/",
       "https://www.instagram.com/afloat_japan/",
       DEFAULT_BOOKING_URL
