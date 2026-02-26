@@ -293,6 +293,12 @@ textarea {
   color: #2f7771;
 }
 
+.catalog-embed-status {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  color: #4a5f63;
+}
+
 .catalog-note {
   margin: 10px 0 0;
 }
