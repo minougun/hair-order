@@ -45,29 +45,8 @@ body {
   padding: 10px 14px 8px;
 }
 
-.top-meta {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.point-pill {
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: #fff4f8;
-  border: 1px solid #f0d8e2;
-  color: #933a5d;
-  font-size: 0.76rem;
-  font-weight: 700;
-}
-
 h1 {
-  margin: 8px 0 4px;
+  margin: 0 0 4px;
   font-size: clamp(1.05rem, 2.4vw, 1.3rem);
   letter-spacing: 0.01em;
 }
