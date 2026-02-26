@@ -16,6 +16,7 @@ const catalogMainEl = document.getElementById("catalog-main");
 const catalogGridEl = document.getElementById("catalog-grid");
 const catalogEmbedWrapEl = document.getElementById("catalog-embed-wrap");
 const catalogEmbedFrameEl = document.getElementById("catalog-embed-frame");
+const catalogEmbedStatusEl = document.getElementById("catalog-embed-status");
 const frontPhotoInput = document.getElementById("front-photo");
 const sidePhotoInput = document.getElementById("side-photo");
 const topPhotoInput = document.getElementById("top-photo");
@@ -617,6 +618,10 @@ function renderCatalog(catalog) {
   catalogGridEl.innerHTML = "";
   catalogEmbedWrapEl.hidden = true;
   catalogEmbedFrameEl.removeAttribute("src");
+  if (catalogEmbedStatusEl) {
+    catalogEmbedStatusEl.hidden = true;
+    catalogEmbedStatusEl.textContent = "";
+  }
 
   if (!catalog || !Array.isArray(catalog.items) || catalog.items.length === 0) {
     catalogMainEl.textContent = "該当候補が見つかりませんでした。";
@@ -680,13 +685,29 @@ function renderCatalogCard(item, isMain) {
 
 function renderCatalogEmbed(item) {
   const instagram = (item.externalLinks ?? []).find((link) => /instagram\.com/i.test(link.url));
-  if (!instagram) return;
+  if (!instagram) {
+    if (catalogEmbedStatusEl) {
+      catalogEmbedStatusEl.textContent = "最有力候補のInstagramリンクが未登録のため、埋め込みは表示していません。";
+      catalogEmbedStatusEl.hidden = false;
+    }
+    return;
+  }
 
   const embedUrl = toInstagramEmbedUrl(instagram.url);
-  if (!embedUrl) return;
+  if (!embedUrl) {
+    if (catalogEmbedStatusEl) {
+      catalogEmbedStatusEl.textContent = "Instagramリンク形式に対応できないため、埋め込みは表示していません。";
+      catalogEmbedStatusEl.hidden = false;
+    }
+    return;
+  }
 
   catalogEmbedFrameEl.src = embedUrl;
   catalogEmbedWrapEl.hidden = false;
+  if (catalogEmbedStatusEl) {
+    catalogEmbedStatusEl.textContent = "最有力候補のInstagram埋め込みを表示しています。";
+    catalogEmbedStatusEl.hidden = false;
+  }
 }
 
 function toInstagramEmbedUrl(url) {
