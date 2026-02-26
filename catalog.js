@@ -54,7 +54,7 @@ export const HAIR_CATALOG = [
       "https://www.instagram.com/shima_official_account/",
       "https://www.shima-hair.com/reserve/"
     ),
-    tags: ["length_short", "goal_casual", "goal_sharp", "time_7", "tool_iron_ok", "style_texture", "shape_volume_top", "occasion_flexible", "gender_female"],
+    tags: ["length_short", "goal_casual", "goal_sharp", "time_7", "tool_iron_ok", "style_texture", "shape_volume_top", "occasion_flexible", "gender_unisex"],
   },
   {
     id: "C04",
@@ -96,7 +96,7 @@ export const HAIR_CATALOG = [
       "https://www.instagram.com/minx_hair/",
       "https://8eca03.b-merit.jp/z3SPb7/web/reserve1/?from_coupon=1&no_coupon=1&redirect=1"
     ),
-    tags: ["length_medium", "goal_soft", "goal_casual", "time_7", "tool_no_iron", "style_layer", "hair_wavy", "shape_anti_frizz", "gender_female"],
+    tags: ["length_medium", "goal_soft", "goal_casual", "time_7", "tool_no_iron", "style_layer", "hair_wavy", "shape_anti_frizz", "gender_unisex"],
   },
   {
     id: "C07",
@@ -110,7 +110,7 @@ export const HAIR_CATALOG = [
       "https://www.instagram.com/garden_hair/",
       "https://www.garden-hair.jp/reserve/"
     ),
-    tags: ["length_medium", "goal_clean", "goal_soft", "time_7", "tool_no_iron", "shape_anti_frizz", "style_natural", "hair_wavy", "gender_female"],
+    tags: ["length_medium", "goal_clean", "goal_soft", "time_7", "tool_no_iron", "shape_anti_frizz", "style_natural", "hair_wavy", "gender_unisex"],
   },
   {
     id: "C08",
@@ -222,7 +222,7 @@ export const HAIR_CATALOG = [
       "",
       "https://beauty.hotpepper.jp/slnH000519584/"
     ),
-    tags: ["length_medium", "goal_soft", "goal_casual", "time_7", "tool_no_iron", "style_layer", "hair_wavy", "shape_anti_frizz", "gender_female"],
+    tags: ["length_medium", "goal_soft", "goal_casual", "time_7", "tool_no_iron", "style_layer", "hair_wavy", "shape_anti_frizz", "gender_unisex"],
   },
   {
     id: "C16",
@@ -264,7 +264,7 @@ export const HAIR_CATALOG = [
       "",
       "https://beauty.hotpepper.jp/slnH000748015/"
     ),
-    tags: ["length_short", "goal_clean", "goal_soft", "time_7", "tool_no_iron", "shape_anti_frizz", "style_natural", "occasion_flexible", "gender_female"],
+    tags: ["length_short", "goal_clean", "goal_soft", "time_7", "tool_no_iron", "shape_anti_frizz", "style_natural", "occasion_flexible", "gender_unisex"],
   },
   {
     id: "C19",
@@ -334,6 +334,7 @@ const TAG_LABELS = {
   volume_low: "少なめ向け",
   gender_male: "男性向け",
   gender_female: "女性向け",
+  gender_unisex: "ユニセックス",
 };
 
 const FREE_TEXT_RULES = [
@@ -356,9 +357,14 @@ export function findBestCatalogItems({ input, result, limit = 3 }) {
   const querySet = new Set(queryTags);
   const locationSignal = buildLocationSignal(input);
   const freeTextSignal = buildFreeTextSignal(input.customRequest);
-  const requiredGenderTag = input.gender === "female" ? "gender_female" : "gender_male";
+  const allowedGenderTags =
+    input.gender === "female"
+      ? new Set(["gender_female", "gender_unisex"])
+      : new Set(["gender_male", "gender_unisex"]);
 
-  const scored = HAIR_CATALOG.filter((item) => item.tags.includes(requiredGenderTag)).map((item) => {
+  const scored = HAIR_CATALOG
+    .filter((item) => item.tags.some((tag) => allowedGenderTags.has(tag)))
+    .map((item) => {
     const matchedTags = item.tags.filter((tag) => querySet.has(tag));
     let score = matchedTags.reduce((sum, tag) => sum + tagWeight(tag), 0);
 
@@ -384,7 +390,8 @@ export function findBestCatalogItems({ input, result, limit = 3 }) {
       matchedAreaKeyword: locationResult.matchedAreaKeyword,
       matchedFreeTextLabels: freeTextResult.matchedLabels,
     };
-  }).sort((a, b) => {
+  })
+    .sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
     const distanceA = Number.isFinite(a.distanceKm) ? a.distanceKm : Number.POSITIVE_INFINITY;
     const distanceB = Number.isFinite(b.distanceKm) ? b.distanceKm : Number.POSITIVE_INFINITY;
@@ -411,6 +418,7 @@ function buildQueryTags(input, result) {
   tags.add(`time_${input.setTime}`);
   tags.add(input.iron === "yes" ? "tool_iron_ok" : "tool_no_iron");
   tags.add(input.gender === "female" ? "gender_female" : "gender_male");
+  tags.add("gender_unisex");
 
   if (input.dressCode === "strict") {
     tags.add("occasion_office");
