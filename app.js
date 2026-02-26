@@ -149,6 +149,7 @@ function collectInput() {
   const latitude = Number.parseFloat(`${data.get("latitude") || ""}`);
   const longitude = Number.parseFloat(`${data.get("longitude") || ""}`);
   const areaQuery = `${data.get("areaQuery") || ""}`.trim();
+  const customRequest = `${data.get("customRequest") || ""}`.trim();
 
   return {
     gender: data.get("gender") || "male",
@@ -164,6 +165,7 @@ function collectInput() {
     dressCode: data.get("dressCode") || "normal",
     maintenance: data.get("maintenance") || "1m",
     areaQuery,
+    customRequest,
     location:
       Number.isFinite(latitude) && Number.isFinite(longitude)
         ? { lat: latitude, lng: longitude }
@@ -219,6 +221,9 @@ function generateOrder(input) {
 
   if (concernLabels.length > 0) {
     summaryParts.push(`${concernLabels.join("・")}を優先して調整`);
+  }
+  if (input.customRequest) {
+    summaryParts.push("自由記述の要望を反映");
   }
 
   const specifics = [];
@@ -309,6 +314,7 @@ function generateOrder(input) {
     ng: compactNg,
     ask: compactAsk,
     search: compactSearch,
+    customRequest: input.customRequest,
   });
 
   const shareText = buildShareText({
@@ -334,6 +340,7 @@ function generateOrder(input) {
     goalLabels,
     gender: input.gender,
     setTime: input.setTime,
+    customRequest: input.customRequest,
   };
 
   const catalog = findBestCatalogItems({
@@ -411,7 +418,7 @@ function selectBestPreset(input) {
   return best;
 }
 
-function buildOrderText({ summary, specifics, ng, ask, search }) {
+function buildOrderText({ summary, specifics, ng, ask, search, customRequest }) {
   return [
     "【要約】",
     summary,
@@ -427,6 +434,9 @@ function buildOrderText({ summary, specifics, ng, ask, search }) {
     "",
     "【参考写真の検索ワード】",
     ...search.map((item) => `- ${item}`),
+    "",
+    "【その他要望】",
+    customRequest ? `- ${customRequest}` : "- 特になし",
   ].join("\n");
 }
 
