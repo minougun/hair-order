@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>美容室オーダー文メーカー MVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&family=Outfit:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+
+    <header class="hero shell">
+      <p class="eyebrow">MVP / 画像なし運用対応</p>
+      <h1>美容室オーダー文メーカー</h1>
+      <p>
+        悩みと制約を選ぶだけで、美容師にそのまま見せられる文章を生成します。
+        診断ではなく、言語化支援として使う前提です。
+      </p>
+    </header>
+
+    <main class="shell layout">
+      <section class="panel form-panel">
+        <h2>1. 入力（10タップ目安）</h2>
+        <form id="order-form">
+          <fieldset>
+            <legend>現状</legend>
+            <div class="grid-2">
+              <label>長さ
+                <select name="length">
+                  <option value="short">短め</option>
+                  <option value="medium">中くらい</option>
+                  <option value="long">長め</option>
+                </select>
+              </label>
+              <label>量
+                <select name="volume">
+                  <option value="low">少なめ</option>
+                  <option value="normal" selected>普通</option>
+                  <option value="high">多め</option>
+                </select>
+              </label>
+              <label>硬さ
+                <select name="stiffness">
+                  <option value="soft">柔らかい</option>
+                  <option value="normal" selected>普通</option>
+                  <option value="hard">硬い</option>
+                </select>
+              </label>
+              <label>クセ
+                <select name="wave">
+                  <option value="straight">直毛</option>
+                  <option value="wavy">うねり</option>
+                  <option value="curly">強いクセ</option>
+                </select>
+              </label>
+              <label>つむじの強さ
+                <select name="crown">
+                  <option value="weak">弱い</option>
+                  <option value="normal" selected>普通</option>
+                  <option value="strong">強い</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>困りごと（複数可）</legend>
+            <div class="chip-group">
+              <label class="chip"><input type="checkbox" name="concerns" value="front_split" />前髪割れ</label>
+              <label class="chip"><input type="checkbox" name="concerns" value="top_flat" />トップ潰れ</label>
+              <label class="chip"><input type="checkbox" name="concerns" value="side_puff" />サイド膨らみ</label>
+              <label class="chip"><input type="checkbox" name="concerns" value="hachi_wide" />ハチ張り</label>
+              <label class="chip"><input type="checkbox" name="concerns" value="frizz" />広がり</label>
+              <label class="chip"><input type="checkbox" name="concerns" value="limp" />ぺたんこ</label>
+              <label class="chip"><input type="checkbox" name="concerns" value="style_fades" />セット崩れ</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>なりたい印象（複数可）</legend>
+            <div class="chip-group">
+              <label class="chip"><input type="checkbox" name="goals" value="clean" checked />清潔感</label>
+              <label class="chip"><input type="checkbox" name="goals" value="sharp" />シャープ</label>
+              <label class="chip"><input type="checkbox" name="goals" value="soft" />柔らかめ</label>
+              <label class="chip"><input type="checkbox" name="goals" value="korean" />韓国っぽい</label>
+              <label class="chip"><input type="checkbox" name="goals" value="business" checked />ビジネス寄り</label>
+              <label class="chip"><input type="checkbox" name="goals" value="casual" />カジュアル</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>制約</legend>
+            <div class="grid-2">
+              <label>朝セット時間
+                <select name="setTime">
+                  <option value="0">0分</option>
+                  <option value="3" selected>3分</option>
+                  <option value="7">7分</option>
+                  <option value="15">15分</option>
+                </select>
+              </label>
+              <label>アイロン
+                <select name="iron">
+                  <option value="no" selected>使わない</option>
+                  <option value="yes">使う</option>
+                </select>
+              </label>
+              <label>職場ルール
+                <select name="dressCode">
+                  <option value="strict">厳しめ</option>
+                  <option value="normal" selected>普通</option>
+                  <option value="free">ゆるめ</option>
+                </select>
+              </label>
+              <label>メンテ頻度
+                <select name="maintenance">
+                  <option value="2w">1〜2週</option>
+                  <option value="1m" selected>1ヶ月</option>
+                  <option value="2m">2ヶ月</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="cta">オーダー文を生成</button>
+        </form>
+      </section>
+
+      <section id="result-section" class="panel result-panel" hidden>
+        <h2>2. 生成結果</h2>
+        <p id="result-badge" class="result-badge"></p>
+
+        <article class="result-block">
+          <h3>要約</h3>
+          <p id="result-summary"></p>
+        </article>
+
+        <article class="result-block">
+          <h3>具体指示</h3>
+          <ul id="result-specifics"></ul>
+        </article>
+
+        <article class="result-block">
+          <h3>避けたいこと</h3>
+          <ul id="result-ng"></ul>
+        </article>
+
+        <article class="result-block">
+          <h3>美容師に聞く</h3>
+          <ul id="result-ask"></ul>
+        </article>
+
+        <article class="result-block">
+          <h3>検索ワード</h3>
+          <ul id="result-search"></ul>
+        </article>
+
+        <article class="result-block">
+          <h3>そのまま見せる本文</h3>
+          <textarea id="order-text" rows="14" readonly></textarea>
+          <button id="copy-order" type="button" class="ghost">本文をコピー</button>
+        </article>
+
+        <article class="result-block">
+          <h3>シェアカード文</h3>
+          <textarea id="share-text" rows="7" readonly></textarea>
+          <button id="copy-share" type="button" class="ghost">カード文をコピー</button>
+          <button id="download-card" type="button" class="ghost">結果カードPNGを保存</button>
+          <a id="card-download-link" class="download-link" hidden download="hair-order-card.png">ダウンロード準備完了: クリックして保存</a>
+          <canvas id="share-card-canvas" width="1080" height="1350" hidden></canvas>
+        </article>
+
+        <p class="note">
+          本アプリは医療・障害・性格の判定を行いません。提案は参考情報として扱い、最終判断は美容師と相談してください。
+        </p>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
