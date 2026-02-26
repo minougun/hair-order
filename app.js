@@ -231,11 +231,12 @@ function generateOrder(input) {
   const ng = [];
   const ask = [];
   const search = [];
+  const genderPrefix = input.gender === "female" ? "レディース" : "メンズ";
 
   pushAll(specifics, preset.specifics);
   pushAll(ng, preset.ng);
   pushAll(ask, preset.ask);
-  pushAll(search, preset.search);
+  pushGenderSearchTerms(search, preset.search, genderPrefix);
 
   for (const concernKey of input.concerns) {
     const rule = CONCERN_RULES[concernKey];
@@ -243,7 +244,7 @@ function generateOrder(input) {
     pushAll(specifics, rule.specifics);
     pushAll(ng, rule.ng);
     pushAll(ask, rule.ask);
-    pushAll(search, rule.search);
+    pushGenderSearchTerms(search, rule.search, genderPrefix);
   }
 
   if (timeRule) {
@@ -273,11 +274,11 @@ function generateOrder(input) {
   }
 
   if (input.length === "short") {
-    search.push("メンズ ショート");
+    search.push(`${genderPrefix} ショート`);
   } else if (input.length === "medium") {
-    search.push("メンズ ミディアム");
+    search.push(`${genderPrefix} ミディアム`);
   } else {
-    search.push("メンズ ロング");
+    search.push(`${genderPrefix} ロング`);
   }
 
   if (input.volume === "high") {
@@ -298,7 +299,7 @@ function generateOrder(input) {
 
   for (const goalKey of input.goals) {
     const rule = GOAL_RULES[goalKey];
-    if (rule) pushAll(search, rule.search);
+    if (rule) pushGenderSearchTerms(search, rule.search, genderPrefix);
   }
 
   const summaryLead = summaryParts.length > 0 ? summaryParts.join("、") : "再現性を優先";
@@ -864,6 +865,23 @@ function renderList(target, items) {
     li.textContent = item;
     target.appendChild(li);
   }
+}
+
+function pushGenderSearchTerms(target, items, genderPrefix) {
+  if (!Array.isArray(items)) return;
+  for (const item of items) {
+    const normalized = normalizeGenderSearchTerm(item, genderPrefix);
+    if (normalized.length > 0) {
+      target.push(normalized);
+    }
+  }
+}
+
+function normalizeGenderSearchTerm(term, genderPrefix) {
+  const normalizedTerm = `${term || ""}`.replace(/\s+/g, " ").trim();
+  if (normalizedTerm.length === 0) return "";
+  const withoutGenderToken = normalizedTerm.replace(/(?:^|\s)(メンズ|レディース)(?=\s|$)/g, " ").replace(/\s+/g, " ").trim();
+  return withoutGenderToken.length > 0 ? `${genderPrefix} ${withoutGenderToken}` : genderPrefix;
 }
 
 function pushAll(target, items) {

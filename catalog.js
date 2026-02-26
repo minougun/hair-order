@@ -96,7 +96,7 @@ export const HAIR_CATALOG = [
       "https://www.instagram.com/minx_hair/",
       "https://8eca03.b-merit.jp/z3SPb7/web/reserve1/?from_coupon=1&no_coupon=1&redirect=1"
     ),
-    tags: ["length_medium", "goal_soft", "goal_casual", "time_7", "tool_no_iron", "style_layer", "hair_wavy", "shape_anti_frizz", "gender_unisex"],
+    tags: ["length_medium", "goal_soft", "goal_casual", "time_7", "tool_no_iron", "style_layer", "hair_wavy", "shape_anti_frizz", "gender_female"],
   },
   {
     id: "C07",
