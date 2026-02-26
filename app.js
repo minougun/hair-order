@@ -272,7 +272,10 @@ function selectBestPreset(input) {
     }
 
     if (when.dressCode) {
-      score += when.dressCode === input.dressCode ? 2 : 0;
+      if (when.dressCode !== input.dressCode) {
+        continue;
+      }
+      score += 2;
     }
 
     if (when.iron) {
