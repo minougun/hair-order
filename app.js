@@ -43,7 +43,7 @@ form.addEventListener("submit", (event) => {
   const result = generateOrder(input);
   renderResult(result);
   resultSection.hidden = false;
-  resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  resultSection.scrollIntoView?.({ behavior: "smooth", block: "start" });
 });
 
 copyOrderButton.addEventListener("click", async () => {
@@ -574,7 +574,7 @@ function renderCatalogCard(item, isMain) {
 }
 
 function renderCatalogEmbed(item) {
-  const instagram = (item.externalLinks ?? []).find((link) => /instagram\\.com/i.test(link.url));
+  const instagram = (item.externalLinks ?? []).find((link) => /instagram\.com/i.test(link.url));
   if (!instagram) return;
 
   const embedUrl = toInstagramEmbedUrl(instagram.url);
@@ -587,10 +587,10 @@ function renderCatalogEmbed(item) {
 function toInstagramEmbedUrl(url) {
   try {
     const parsed = new URL(url);
-    if (!/instagram\\.com$/i.test(parsed.hostname) && !/\\.instagram\\.com$/i.test(parsed.hostname)) {
+    if (!/instagram\.com$/i.test(parsed.hostname) && !/\.instagram\.com$/i.test(parsed.hostname)) {
       return null;
     }
-    if (/\\/embed\\/?$/i.test(parsed.pathname)) {
+    if (/\/embed\/?$/i.test(parsed.pathname)) {
       return `${parsed.origin}${parsed.pathname}`;
     }
     const basePath = parsed.pathname.endsWith("/") ? parsed.pathname : `${parsed.pathname}/`;
