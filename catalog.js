@@ -336,10 +336,26 @@ const TAG_LABELS = {
   gender_female: "女性向け",
 };
 
+const FREE_TEXT_RULES = [
+  { label: "韓国寄せ", keywords: ["韓国", "センターパート", "コンマヘア"], tags: ["style_korean", "style_center_part", "goal_korean"] },
+  { label: "ビジネス寄り", keywords: ["ビジネス", "就活", "校則", "職場"], tags: ["goal_business", "goal_clean", "occasion_office"] },
+  { label: "清潔感", keywords: ["清潔感", "爽やか", "きちんと"], tags: ["goal_clean", "style_natural"] },
+  { label: "ナチュラル", keywords: ["ナチュラル", "自然", "やりすぎない"], tags: ["style_natural", "goal_clean"] },
+  { label: "束感", keywords: ["束感", "動き", "軽め"], tags: ["style_texture", "goal_casual"] },
+  { label: "柔らかめ", keywords: ["柔らか", "丸み", "優しい"], tags: ["goal_soft", "style_layer"] },
+  { label: "シャープ", keywords: ["シャープ", "タイト", "引き締め"], tags: ["goal_sharp", "shape_tight_side"] },
+  { label: "広がり対策", keywords: ["広がり", "まとまり", "ボリューム抑え"], tags: ["shape_anti_frizz", "style_natural"] },
+  { label: "耳まわりすっきり", keywords: ["耳まわり", "耳周り", "耳出し", "襟足すっきり"], tags: ["shape_tight_side", "goal_clean"] },
+  { label: "トップふんわり", keywords: ["トップ", "ふんわり", "ボリューム"], tags: ["shape_volume_top"] },
+  { label: "前髪コントロール", keywords: ["前髪", "割れ", "前髪重め"], tags: ["shape_control_bangs"] },
+  { label: "アイロンなし", keywords: ["アイロンなし", "ノーアイロン", "熱なし"], tags: ["tool_no_iron"] },
+];
+
 export function findBestCatalogItems({ input, result, limit = 3 }) {
   const queryTags = buildQueryTags(input, result);
   const querySet = new Set(queryTags);
   const locationSignal = buildLocationSignal(input);
+  const freeTextSignal = buildFreeTextSignal(input.customRequest);
 
   const scored = HAIR_CATALOG.map((item) => {
     const matchedTags = item.tags.filter((tag) => querySet.has(tag));
@@ -355,6 +371,8 @@ export function findBestCatalogItems({ input, result, limit = 3 }) {
 
     const locationResult = scoreLocation(item, locationSignal);
     score += locationResult.locationScore;
+    const freeTextResult = scoreByFreeText(item, freeTextSignal, locationResult, locationSignal);
+    score += freeTextResult.score;
 
     return {
       ...item,
@@ -363,6 +381,7 @@ export function findBestCatalogItems({ input, result, limit = 3 }) {
       matchedLabels: matchedTags.map((tag) => TAG_LABELS[tag]).filter(Boolean),
       distanceKm: locationResult.distanceKm,
       matchedAreaKeyword: locationResult.matchedAreaKeyword,
+      matchedFreeTextLabels: freeTextResult.matchedLabels,
     };
   }).sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
@@ -511,6 +530,9 @@ function buildReasonText(item) {
   if (item.matchedLabels.length > 0) {
     reasonParts.push(...item.matchedLabels.slice(0, 3));
   }
+  if (Array.isArray(item.matchedFreeTextLabels) && item.matchedFreeTextLabels.length > 0) {
+    reasonParts.push(`自由記述:${item.matchedFreeTextLabels.slice(0, 1).join("・")}`);
+  }
 
   if (Number.isFinite(item.distanceKm)) {
     reasonParts.push(`距離${item.distanceKm.toFixed(1)}km`);
@@ -559,6 +581,97 @@ function normalizeText(value) {
     .toLowerCase()
     .replace(/[\s　\-ー_]/g, "")
     .normalize("NFKC");
+}
+
+function buildFreeTextSignal(customRequest) {
+  const raw = `${customRequest || ""}`.trim();
+  if (raw.length === 0) {
+    return {
+      raw,
+      tagSet: new Set(),
+      matchedRules: [],
+    };
+  }
+
+  const normalized = normalizeText(raw);
+  const matchedRules = [];
+  const tagSet = new Set();
+
+  for (const rule of FREE_TEXT_RULES) {
+    const matched = rule.keywords.some((keyword) => {
+      const normalizedKeyword = normalizeText(keyword);
+      return normalizedKeyword.length > 0 && normalized.includes(normalizedKeyword);
+    });
+    if (!matched) continue;
+    matchedRules.push(rule);
+    for (const tag of rule.tags) {
+      tagSet.add(tag);
+    }
+  }
+
+  return {
+    raw,
+    tagSet,
+    matchedRules,
+  };
+}
+
+function scoreByFreeText(item, freeTextSignal, locationResult, locationSignal) {
+  if (!freeTextSignal.raw || freeTextSignal.tagSet.size === 0) {
+    return {
+      score: 0,
+      matchedLabels: [],
+    };
+  }
+
+  const matchedTags = item.tags.filter((tag) => freeTextSignal.tagSet.has(tag));
+  if (matchedTags.length === 0) {
+    return {
+      score: 0,
+      matchedLabels: [],
+    };
+  }
+
+  // Keep location-first behavior: avoid free-text boosts for far-away items.
+  const hasLocationPreference = Boolean(locationSignal.coords) || locationSignal.areaTokens.length > 0;
+  if (hasLocationPreference) {
+    if (locationResult.locationScore < 0) {
+      return {
+        score: 0,
+        matchedLabels: [],
+      };
+    }
+    if (Number.isFinite(locationResult.distanceKm) && locationResult.distanceKm > 120) {
+      return {
+        score: 0,
+        matchedLabels: [],
+      };
+    }
+  }
+
+  const rawScore = matchedTags.reduce((sum, tag) => sum + freeTextTagWeight(tag), 0);
+  const score = Math.min(10, rawScore);
+
+  const matchedLabels = uniqueStrings(
+    freeTextSignal.matchedRules
+      .filter((rule) => rule.tags.some((tag) => item.tags.includes(tag)))
+      .map((rule) => rule.label)
+  ).slice(0, 2);
+
+  return {
+    score,
+    matchedLabels,
+  };
+}
+
+function freeTextTagWeight(tag) {
+  if (tag.startsWith("goal_") || tag.startsWith("shape_")) return 3;
+  if (tag.startsWith("style_") || tag.startsWith("tool_")) return 2;
+  return 1;
+}
+
+function uniqueStrings(items) {
+  return [...new Set(items)];
 }
 
 function normalizeAreaToken(value) {
